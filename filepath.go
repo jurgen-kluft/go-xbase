@@ -13,7 +13,14 @@ var (
 	envre = regexp.MustCompile(`^(\$[a-zA-Z][a-zA-Z0-9_]+|\$\([a-zA-Z][a-zA-Z0-9_]+\))$`)
 )
 
-func XFilePathGlob(pattern string) ([]string, error) {
+const (
+	constOperatingSystemStringWindows = "windows"
+	constOperatingSystemStringDarwin  = "darwin"
+)
+
+// FilePathGlob globs the incoming 'path/*.*' pattern and returns an array of filepaths that
+// match the pattern.
+func FilePathGlob(pattern string) ([]string, error) {
 	globmask := ""
 	root := ""
 	matches := []string{}
@@ -27,7 +34,7 @@ func XFilePathGlob(pattern string) ([]string, error) {
 			}
 		}
 		if n == 0 && i == "~" {
-			if runtime.GOOS == "windows" {
+			if runtime.GOOS == constOperatingSystemStringWindows {
 				i = os.Getenv("USERPROFILE")
 			} else {
 				i = os.Getenv("HOME")
@@ -39,7 +46,7 @@ func XFilePathGlob(pattern string) ([]string, error) {
 
 		globmask = filepath.Join(globmask, i)
 		if n == 0 {
-			if runtime.GOOS == "windows" && filepath.VolumeName(i) != "" {
+			if runtime.GOOS == constOperatingSystemStringWindows && filepath.VolumeName(i) != "" {
 				globmask = i + "/"
 			} else if len(globmask) == 0 {
 				globmask = "/"
@@ -91,7 +98,7 @@ func XFilePathGlob(pattern string) ([]string, error) {
 		}
 		filemask += "[^/]*"
 	}
-	if runtime.GOOS == "windows" || runtime.GOOS == "darwin" {
+	if runtime.GOOS == constOperatingSystemStringWindows || runtime.GOOS == constOperatingSystemStringDarwin {
 		dirmask = "(?i:" + dirmask + ")"
 		filemask = "(?i:" + filemask + ")"
 	}
