@@ -3,7 +3,6 @@ package xbase
 import (
 	"regexp"
 	"strconv"
-	"strings"
 	"bytes"
 	"fmt"
 	"encoding/json"
