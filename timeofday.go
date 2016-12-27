@@ -3,6 +3,7 @@ package xbase
 import (
 	"regexp"
 	"strconv"
+	"fmt"
 )
 
 // TimeOfDay is a structure holding a 24-hour time point
@@ -38,6 +39,11 @@ func (t TimeOfDay) Add(o TimeOfDay) (r TimeOfDay) {
 	r.Seconds = t.Seconds + o.Seconds
 	r = r.Mod()
 	return
+}
+
+// String converts TimeOfDay to a string
+func (t TimeOfDay) String() string {
+	return fmt.Sprintf("%d:%d:%d", t.Hours, t.Minutes, t.Seconds)
 }
 
 // ParseTimeOfDay parses a time of day string value and returns an instance of TimeOfDay
