@@ -65,6 +65,13 @@ func (t TimeOfDay) UnmarshalJSON(b []byte) error {
 	return nil
 }
 
+func stripSemi(value string) string {
+	if strings.HasPrefix(value, ":") {
+		return value[1:]
+	}
+	return value
+}
+
 // ParseTimeOfDay parses a time of day string value and returns an instance of TimeOfDay
 func ParseTimeOfDay(str string) TimeOfDay {
 	durationRegex := regexp.MustCompile("([0-9]{1,2})(:[0-9]{1,2})(:[0-9]{1,2}){0,1}[ ]{0,1}([AP]M){0,1}")
@@ -91,9 +98,9 @@ func ParseTimeOfDay(str string) TimeOfDay {
 		}
 	
 		if lenMatches >= 3 {
-			minute = ParseInt8(matches[2][1:])
+			minute = ParseInt8(stripSemi(matches[2]))
 			if lenMatches >= 4 {
-				second = ParseInt8(matches[3][1:])
+				second = ParseInt8(stripSemi(matches[3]))
 			}
 		}
 	}
