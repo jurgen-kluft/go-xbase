@@ -52,18 +52,18 @@ func TestTimeOfDayParsing(t *testing.T) {
 		})
 
 		c.Convey("Testing addition, no mod", func() {
-			clock1 := ParseTimeOfDay("2:0:0")
+			clock := ParseTimeOfDay("2:0:0")
 			clock2 := ParseTimeOfDay("0:3:4")
-			clock := clock1.Add(clock2)
+			clock.Add(clock2)
 			c.Convey("The result should be 2:3:4", func() {
 				c.So(clock, c.ShouldResemble, TimeOfDay{Hours: 2, Minutes: 3, Seconds: 4})
 			})
 		})
 
 		c.Convey("Testing addition, mod", func() {
-			clock1 := ParseTimeOfDay("18:57:55")
+			clock := ParseTimeOfDay("18:57:55")
 			clock2 := ParseTimeOfDay("7:5:9")
-			clock := clock1.Add(clock2)
+			clock.Add(clock2)
 			c.Convey("The result should be 2:3:4", func() {
 				c.So(clock, c.ShouldResemble, TimeOfDay{Hours: 2, Minutes: 3, Seconds: 4})
 			})
