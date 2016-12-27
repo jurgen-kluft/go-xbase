@@ -1,12 +1,12 @@
 package xbase
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
-	"bytes"
-	"fmt"
-	"encoding/json"
 )
 
 // TimeOfDay is a structure holding a 24-hour time point
@@ -44,19 +44,21 @@ func (t *TimeOfDay) String() string {
 	return fmt.Sprintf("%d:%d:%d", t.Hours, t.Minutes, t.Seconds)
 }
 
+// MarshalJSON encodes the TimeOfDay struct into JSON
 func (t *TimeOfDay) MarshalJSON() ([]byte, error) {
 	buffer := bytes.NewBufferString("")
 	buffer.WriteString(fmt.Sprintf("%d:%d:%d", t.Hours, t.Minutes, t.Seconds))
 	return buffer.Bytes(), nil
 }
 
+// UnmarshalJSON decodes JSON into a TimeOfDay struct
 func (t *TimeOfDay) UnmarshalJSON(b []byte) error {
 	var tod string
 	err := json.Unmarshal(b, &tod)
 	if err != nil {
 		return err
 	}
-	t = ParseTimeOfDay(tod)
+	t.Parse(tod)
 	return nil
 }
 
@@ -67,41 +69,39 @@ func stripSemi(value string) string {
 	return value
 }
 
-// ParseTimeOfDay parses a time of day string value and returns an instance of TimeOfDay
-func ParseTimeOfDay(str string) *TimeOfDay {
+// Parse parses a time of day string value
+func (t *TimeOfDay) Parse(str string) {
 	fmt.Println(str)
 	durationRegex := regexp.MustCompile("([0-9]{1,2})(:[0-9]{1,2})(:[0-9]{1,2}){0,1}[ ]{0,1}([AP]M){0,1}")
 	matches := durationRegex.FindStringSubmatch(str)
 
-	var hour int8 = 0
-	var minute int8 = 0
-	var second int8 = 0
-	
+	t.Hours = 0
+	t.Minutes = 0
+	t.Seconds = 0
+
 	lenMatches := len(matches)
 	if lenMatches >= 2 {
-		hour = ParseInt8(matches[1])
-	
+		t.Hours = ParseInt8(matches[1])
+
 		if matches[lenMatches-1] == "PM" {
-			lenMatches -= 1
-			if hour < 12 {
-				hour += 12
+			lenMatches--
+			if t.Hours < 12 {
+				t.Hours += 12
 			}
 		} else if matches[lenMatches-1] == "AM" {
-			lenMatches -= 1
-			if hour > 12 {
-				hour -= 12
+			lenMatches--
+			if t.Hours > 12 {
+				t.Hours -= 12
 			}
 		}
-	
+
 		if lenMatches >= 3 {
-			minute = ParseInt8(stripSemi(matches[2]))
+			t.Minutes = ParseInt8(stripSemi(matches[2]))
 			if lenMatches >= 4 {
-				second = ParseInt8(stripSemi(matches[3]))
+				t.Seconds = ParseInt8(stripSemi(matches[3]))
 			}
 		}
 	}
-	
-	return &TimeOfDay{Hours: hour, Minutes: minute, Seconds: second}
 }
 
 // ParseInt8 parses a string containing a number into an 8 bit value
@@ -109,7 +109,7 @@ func ParseInt8(value string) int8 {
 	if len(value) == 0 {
 		return 0
 	}
-	
+
 	parsed, err := strconv.Atoi(value[:len(value)])
 	if err != nil {
 		return 0
