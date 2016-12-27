@@ -3,6 +3,7 @@ package xbase
 import (
 	"regexp"
 	"strconv"
+	"strings"
 	"bytes"
 	"fmt"
 	"encoding/json"
@@ -67,7 +68,7 @@ func (t TimeOfDay) UnmarshalJSON(b []byte) error {
 
 // ParseTimeOfDay parses a time of day string value and returns an instance of TimeOfDay
 func ParseTimeOfDay(str string) TimeOfDay {
-	durationRegex := regexp.MustCompile("([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})[ ]{0,1}([AP]M){0,1}")
+	durationRegex := regexp.MustCompile("([0-9]{1,2})(:[0-9]{1,2}){1,2}[ ]{0,1}([AP]M){0,1}")
 	matches := durationRegex.FindStringSubmatch(str)
 
 	var hour int8 = 0
@@ -77,9 +78,9 @@ func ParseTimeOfDay(str string) TimeOfDay {
 	if len(matches) >= 2 {
 		hour = ParseInt8(matches[1])
 		if len(matches) >= 3 {
-			minute = ParseInt8(matches[2])
+			minute = ParseInt8(matches[2][1:])
 			if len(matches) >= 4 {
-				second = ParseInt8(matches[3])
+				second = ParseInt8(matches[3][1:])
 			}
 		}
 	}
@@ -103,6 +104,7 @@ func ParseInt8(value string) int8 {
 	if len(value) == 0 {
 		return 0
 	}
+	
 	parsed, err := strconv.Atoi(value[:len(value)])
 	if err != nil {
 		return 0
