@@ -68,6 +68,20 @@ func TestTimeOfDayParsing(t *testing.T) {
 				c.So(clock, c.ShouldResemble, TimeOfDay{Hours: 2, Minutes: 3, Seconds: 4})
 			})
 		})
+		
+		c.Convey("Testing HH:MM, mod", func() {
+			clock := ParseTimeOfDay("18:57")
+			c.Convey("The result should be 18:57:00", func() {
+				c.So(clock, c.ShouldResemble, TimeOfDay{Hours: 18, Minutes: 57, Seconds: 0})
+			})
+		})
+		
+		c.Convey("Testing HH:MM PM, mod", func() {
+			clock := ParseTimeOfDay("18:57 PM")
+			c.Convey("The result should be 18:57:00", func() {
+				c.So(clock, c.ShouldResemble, TimeOfDay{Hours: 18, Minutes: 57, Seconds: 0})
+			})
+		})
 
 	})
 }
