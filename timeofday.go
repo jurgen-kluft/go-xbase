@@ -67,30 +67,32 @@ func (t TimeOfDay) UnmarshalJSON(b []byte) error {
 
 // ParseTimeOfDay parses a time of day string value and returns an instance of TimeOfDay
 func ParseTimeOfDay(str string) TimeOfDay {
-	durationRegex := regexp.MustCompile("([0-9]{1,2})(:[0-9]{1,2}){1,2}[ ]{0,1}([AP]M){0,1}")
+	durationRegex := regexp.MustCompile("([0-9]{1,2})(:[0-9]{1,2})(:[0-9]{1,2}){0,1}[ ]{0,1}([AP]M){0,1}")
 	matches := durationRegex.FindStringSubmatch(str)
 
 	var hour int8 = 0
 	var minute int8 = 0
 	var second int8 = 0
 	
-	if len(matches) >= 2 {
-		hour = ParseInt8(matches[1])
-		if len(matches) >= 3 {
-			minute = ParseInt8(matches[2][1:])
-			if len(matches) >= 4 {
-				second = ParseInt8(matches[3][1:])
-			}
+	lenMatches := len(matches)
+	if matches[lenMatches-1] == "PM" {
+		lenMatches -= 1
+		if hour < 12 {
+			hour += 12
+		}
+	} else if matches[lenMatches-1] == "AM" {
+		lenMatches -= 1
+		if hour > 12 {
+			hour -= 12
 		}
 	}
-	if len(matches) == 5 {
-		if matches[4] == "PM" {
-			if hour < 12 {
-				hour += 12
-			}
-		} else if matches[4] == "AM" {
-			if hour > 12 {
-				hour -= 12
+	
+	if lenMatches >= 2 {
+		hour = ParseInt8(matches[1])
+		if lenMatches >= 3 {
+			minute = ParseInt8(matches[2][1:])
+			if lenMatches >= 4 {
+				second = ParseInt8(matches[3][1:])
 			}
 		}
 	}
