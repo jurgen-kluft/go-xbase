@@ -77,24 +77,24 @@ func ParseTimeOfDay(str string) TimeOfDay {
 	lenMatches := len(matches)
 	if lenMatches >= 2 {
 		hour = ParseInt8(matches[1])
-	}
 	
-	if matches[lenMatches-1] == "PM" {
-		lenMatches -= 1
-		if hour < 12 {
-			hour += 12
+		if matches[lenMatches-1] == "PM" {
+			lenMatches -= 1
+			if hour < 12 {
+				hour += 12
+			}
+		} else if matches[lenMatches-1] == "AM" {
+			lenMatches -= 1
+			if hour > 12 {
+				hour -= 12
+			}
 		}
-	} else if matches[lenMatches-1] == "AM" {
-		lenMatches -= 1
-		if hour > 12 {
-			hour -= 12
-		}
-	}
 	
-	if lenMatches >= 3 {
-		minute = ParseInt8(matches[2][1:])
-		if lenMatches >= 4 {
-			second = ParseInt8(matches[3][1:])
+		if lenMatches >= 3 {
+			minute = ParseInt8(matches[2][1:])
+			if lenMatches >= 4 {
+				second = ParseInt8(matches[3][1:])
+			}
 		}
 	}
 	
