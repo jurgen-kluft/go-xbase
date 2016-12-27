@@ -7,35 +7,35 @@ import (
 
 // TimeOfDay is a structure holding a 24-hour time point
 type TimeOfDay struct {
-	hours   int8
-	minutes int8
-	seconds int8
+	Hours   int8
+	Minutes int8
+	Seconds int8
 }
 
 // Mod will make sure all values are within their ranges
 func (t TimeOfDay) Mod() (r TimeOfDay) {
-	r.seconds = t.seconds
-	r.minutes = t.minutes
-	r.hours = t.hours
-	if r.seconds > 59 {
-		r.minutes += r.seconds / 60
-		r.seconds = r.seconds % 60
+	r.Seconds = t.Seconds
+	r.Minutes = t.Minutes
+	r.Hours = t.Hours
+	if r.Seconds > 59 {
+		r.Minutes += r.Seconds / 60
+		r.Seconds = r.Seconds % 60
 	}
-	if r.minutes > 59 {
-		r.hours += r.minutes / 60
-		r.minutes = r.minutes % 60
+	if r.Minutes > 59 {
+		r.Hours += r.Minutes / 60
+		r.Minutes = r.Minutes % 60
 	}
-	if r.hours > 24 {
-		r.hours = r.hours % 24
+	if r.Hours > 24 {
+		r.Hours = r.Hours % 24
 	}
 	return
 }
 
 // Add can do an addition of two TimeOfDay objects and return the result
 func (t TimeOfDay) Add(o TimeOfDay) (r TimeOfDay) {
-	r.hours = t.hours + o.hours
-	r.minutes = t.minutes + o.minutes
-	r.seconds = t.seconds + o.seconds
+	r.Hours = t.Hours + o.Hours
+	r.Minutes = t.Minutes + o.Minutes
+	r.Seconds = t.Seconds + o.Seconds
 	r = r.Mod()
 	return
 }
@@ -61,7 +61,7 @@ func ParseTimeOfDay(str string) TimeOfDay {
 		}
 	}
 
-	return TimeOfDay{hours: hour, minutes: minute, seconds: second}
+	return TimeOfDay{Hours: hour, Minutes: minute, Seconds: second}
 }
 
 // ParseInt8 parses a string containing a number into an 8 bit value
