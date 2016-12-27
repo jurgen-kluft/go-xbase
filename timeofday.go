@@ -44,6 +44,10 @@ func (t *TimeOfDay) String() string {
 	return fmt.Sprintf("%d:%d:%d", t.Hours, t.Minutes, t.Seconds)
 }
 
+func (t TimeOfDay) String() string {
+	return fmt.Sprintf("%d:%d:%d", t.Hours, t.Minutes, t.Seconds)
+}
+
 
 func (t *TimeOfDay) MarshalJSON() ([]byte, error) {
 	buffer := bytes.NewBufferString("")
