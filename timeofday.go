@@ -70,10 +70,19 @@ func ParseTimeOfDay(str string) TimeOfDay {
 	durationRegex := regexp.MustCompile("([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})[ ]{0,1}([AP]M){0,1}")
 	matches := durationRegex.FindStringSubmatch(str)
 
-	hour := ParseInt8(matches[1])
-	minute := ParseInt8(matches[2])
-	second := ParseInt8(matches[3])
-
+	var hour int8 = 0
+	var minute int8 = 0
+	var second int8 = 0
+	
+	if len(matches) >= 2 {
+		hour := ParseInt8(matches[1])
+		if len(matches) >= 3 {
+			minute := ParseInt8(matches[2])
+			if len(matches) >= 4 {
+				second := ParseInt8(matches[3])
+			}
+		}
+	}
 	if len(matches) == 5 {
 		if matches[4] == "PM" {
 			if hour < 12 {
@@ -85,7 +94,7 @@ func ParseTimeOfDay(str string) TimeOfDay {
 			}
 		}
 	}
-
+	
 	return TimeOfDay{Hours: hour, Minutes: minute, Seconds: second}
 }
 
