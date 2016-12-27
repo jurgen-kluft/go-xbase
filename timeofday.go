@@ -75,11 +75,11 @@ func ParseTimeOfDay(str string) TimeOfDay {
 	var second int8 = 0
 	
 	if len(matches) >= 2 {
-		hour := ParseInt8(matches[1])
+		hour = ParseInt8(matches[1])
 		if len(matches) >= 3 {
-			minute := ParseInt8(matches[2])
+			minute = ParseInt8(matches[2])
 			if len(matches) >= 4 {
-				second := ParseInt8(matches[3])
+				second = ParseInt8(matches[3])
 			}
 		}
 	}
