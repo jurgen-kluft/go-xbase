@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"strconv"
 	"fmt"
+	"encoding/json"
 )
 
 // TimeOfDay is a structure holding a 24-hour time point
@@ -44,6 +45,23 @@ func (t TimeOfDay) Add(o TimeOfDay) (r TimeOfDay) {
 // String converts TimeOfDay to a string
 func (t TimeOfDay) String() string {
 	return fmt.Sprintf("%d:%d:%d", t.Hours, t.Minutes, t.Seconds)
+}
+
+
+func (t TimeOfDay) MarshalJSON() ([]byte, error) {
+	buffer := bytes.NewBufferString("")
+	buffer.WriteString(fmt.Sprintf("%d:%d:%d", t.Hours, t.Minutes, t.Seconds))
+	return buffer.Bytes(), nil
+}
+
+func (t TimeOfDay) UnmarshalJSON(b []byte) error {
+	var tod string
+	err := json.Unmarshal(b, &tod)
+	if err != nil {
+		return err
+	}
+	t = ParseTimeOfDay(tod)
+	return nil
 }
 
 // ParseTimeOfDay parses a time of day string value and returns an instance of TimeOfDay
