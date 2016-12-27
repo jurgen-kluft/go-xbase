@@ -32,7 +32,7 @@ func (t *TimeOfDay) Mod() {
 }
 
 // Add can do an addition of two TimeOfDay objects and return the result
-func (t *TimeOfDay) Add(o TimeOfDay) {
+func (t *TimeOfDay) Add(o *TimeOfDay) {
 	t.Hours = t.Hours + o.Hours
 	t.Minutes = t.Minutes + o.Minutes
 	t.Seconds = t.Seconds + o.Seconds
