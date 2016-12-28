@@ -79,7 +79,6 @@ func stripSemi(value string) string {
 
 // Parse parses a time of day string value
 func (t *TimeOfDay) Parse(str string) {
-	fmt.Println(str)
 	durationRegex := regexp.MustCompile("([0-9]{1,2})(:[0-9]{1,2})(:[0-9]{1,2}){0,1}[ ]{0,1}([AP]M){0,1}")
 	matches := durationRegex.FindStringSubmatch(str)
 
