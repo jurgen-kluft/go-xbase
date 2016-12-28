@@ -103,7 +103,7 @@ func TestTimeOfDayParsing(t *testing.T) {
 			})
 		})
 
-		c.Convey("Testing IsBetween(start,end)", func() {
+		c.Convey("Testing TimeOfDay.IsBetween(start,end)", func() {
 			clock := &TimeOfDay{}
 			start := &TimeOfDay{}
 			end := &TimeOfDay{}
@@ -127,6 +127,29 @@ func TestTimeOfDayParsing(t *testing.T) {
 
 			c.Convey("(7:30).IsBetween(6:00, 11:00) == true", func() {
 				c.So(clock.IsBetween(start, end), c.ShouldEqual, true)
+			})
+		})
+
+		c.Convey("Testing TimeIsBetween(start,end)", func() {
+			start := &TimeOfDay{}
+			end := &TimeOfDay{}
+
+			start.Parse("16:00 PM")
+			end.Parse("19:00PM")
+
+			c.Convey("(18:57 PM).IsBetween(16:00, 19:00) == true", func() {
+				c.So(TimeIsBetween(18, 57, 0, start, end), c.ShouldEqual, true)
+			})
+
+			c.Convey("(19:01 PM).IsBetween(16:00, 19:00) == false", func() {
+				c.So(TimeIsBetween(19, 01, 00, start, end), c.ShouldEqual, false)
+			})
+
+			start.Parse("6:00")
+			end.Parse("11:00")
+
+			c.Convey("(7:30).IsBetween(6:00, 11:00) == true", func() {
+				c.So(TimeIsBetween(07, 30, 00, start, end), c.ShouldEqual, true)
 			})
 		})
 
