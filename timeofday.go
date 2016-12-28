@@ -39,6 +39,14 @@ func (t *TimeOfDay) Add(o *TimeOfDay) {
 	t.Mod()
 }
 
+// IsBetween checks if this falls between @start and @end
+func (t *TimeOfDay) IsBetween(start, end *TimeOfDay) bool {
+	selfInSeconds := int64(t.Hours)*3600 + int64(t.Minutes)*60 + int64(t.Seconds)
+	startInSeconds := int64(start.Hours)*3600 + int64(start.Minutes)*60 + int64(start.Seconds)
+	endInSeconds := int64(end.Hours)*3600 + int64(end.Minutes)*60 + int64(end.Seconds)
+	return selfInSeconds >= startInSeconds && selfInSeconds < endInSeconds
+}
+
 // String converts TimeOfDay to a string
 func (t *TimeOfDay) String() string {
 	return fmt.Sprintf("%d:%d:%d", t.Hours, t.Minutes, t.Seconds)
